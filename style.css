@@ -1,0 +1,42 @@
+body{
+    background-color: yellowgreen;
+}
+.container{
+    display: flex;
+}
+
+#right{
+    background-color: thistle;
+    width: 65%;
+    font-size: 50px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:darkslategray;
+}
+textarea{
+    outline: none;
+    border: 1px solid white;
+    resize: none;
+}
+
+#left{
+    width: 35%;
+    font-size: 22px;
+    background-color: whitesmoke;
+    padding: 25px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+.items{
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.items span span{
+    cursor: pointer;
+}
+hr{
+    padding: 0px;
+    margin: 0px;
+}

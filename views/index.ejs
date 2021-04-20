@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO-APP</title>
+        <link rel="stylesheet" href="../style.css"></link>
+    </head>
+    <body>
+        <div class="container">
+    
+            <div id="left">
+
+                <div id="head">
+                    <h1>TASK LIST</h1>
+                    <p>Add tasks to your list by typing to the right and pressing enter.
+                        You may then view pending tasks below.
+                    </p>
+                </div>
+
+                <div>
+                    <% for(var i=0;i<=todos.length-1;i++){ %>
+                        <div id= "<%= i %>" class="items">
+                            <span <% if(todos[i].status){ %>style="text-decoration: line-through;"<% }else{}%> ><%= todos[i].item %></span>
+                            <span>
+                                <input type="checkbox" onclick=workDone(this) <% if(todos[i].status){ %> checked <%} else {}%>>&nbsp&nbsp
+                                <span onclick="deleteTask(this)">&#x2716;</span>
+                            </span>
+                        </div>
+                        <hr>
+                    <% } %>
+                </div>
+            </div>
+
+            <textarea id="right" onkeypress="key(event)" placeholder="I need to.."></textarea>
+        </div>
+
+        <h1 id="demo"></h1>
+        <script src="../app.js"></script>
+    </body>
+</html>
