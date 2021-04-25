@@ -19,7 +19,7 @@
                 <div>
                     <% for(var i=0;i<=todos.length-1;i++){ %>
                         <div id= "<%= i %>" class="items">
-                            <span <% if(todos[i].status){ %>style="text-decoration: line-through;"<% }else{}%> ><%= todos[i].item %></span>
+                            <span <% if(todos[i].status){ %>style="text-decoration: line-through;"<% }else{}%> ><%= todos[i].task %></span>
                             <span>
                                 <input type="checkbox" onclick=workDone(this) <% if(todos[i].status){ %> checked <%} else {}%>>&nbsp&nbsp
                                 <span onclick="deleteTask(this)">&#x2716;</span>

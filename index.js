@@ -17,7 +17,7 @@ app.use(express.static('./'));
 
 //Connect to mongoose
 var mongoose=require('mongoose');
-mongoose.connect("mongodb://localhost/my_tasks", {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true});
+mongoose.connect("mongodb://localhost/my_tasks", {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true, useFindAndModify: false});
 
 mongoose.connection.once('open', ()=>{
     console.log("connected..");
@@ -36,63 +36,51 @@ var Task=mongoose.model("Tasks", taskSchema);
 
 //GET
 app.get("/", function(res,req){
-    fs.readFile('database.json','utf-8',function(err,dataRead){
-        if(err) throw err;
-        var dataTodo=JSON.parse(dataRead).data;
-
-        req.render('index.ejs', {todos: dataTodo});
-    });
+    Task.find(function(err,data){
+        req.render('index.ejs', {todos: data});
+    })
 });
 
 //POST
 app.post("/addTask",function(req,res){
-    fs.readFile('database.json','utf-8',function(err,data1){
-        if(err) throw err;
-        var d=JSON.parse(data1);
-        d.data.push(req.body);
-        res.json(d);
+    var body=req.body;
+    var newTask=new Task({
+        task: body.item,
+        status: body.status
+    });
+    newTask.save(function(err,data){
+        if(err) console.log("error in adding Task: "+err);
 
-        fs.writeFile('database.json',JSON.stringify(d),function(err){
-            if(err) throw err;
-        });
+        res.json(data);
     });
 });
 
 //DELETE
 app.delete("/deleteTask/:task", function(req,res){
-
-     fs.readFile('database.json','utf-8',function(err,dataRead){
-        if(err) throw err;
-        var d=JSON.parse(dataRead);
-
-        d.data=d.data.filter((todos)=>{
-            return todos.item !== req.params.task;
-        })
-        res.json(d);
-
-        fs.writeFile('database.json',JSON.stringify(d),function(err){
-            if(err) throw err;
-        })
-     })
+    Task.findOneAndRemove({task: req.params.task}, function(err, data){
+        if(err) console.log("Error in deleting Task: "+err);
+        
+        res.json(data);
+    });
 });
 
 //PUT
 app.put("/checked", function(req,res){
-    fs.readFile('database.json','utf-8',function(err,dataRead){
-        if(err) throw err;
-        var d=JSON.parse(dataRead);
+    var body=req.body;
+    if(body.status==true){
+        Task.findOneAndUpdate({task: body.item}, {status: true}, function(err,data){
+            if(err) console.log("Error in setting check true: "+err);
 
-        for(var i=0;i<d.data.length;i++){
-            if(d.data[i].item===req.body.item){
-                d.data[i].status=req.body.status;
-                break;
-            }
-        }
-
-        fs.writeFile('database.json',JSON.stringify(d),function(err){
-            if(err) throw err;
+            res.json(data);
         })
-    });
+    }
+    else if(body.status==false){
+        Task.findOneAndUpdate({task: body.item}, {status: false},function(err,data){
+            if(err) console.log("Error in setting check false: "+err);
+
+            res.json(data);
+        })
+    }
 });
 
 app.listen(8081);
