@@ -14,6 +14,26 @@ app.use(express.json());
 //Middleware for css script files.. "./" coz all are in home
 app.use(express.static('./'));
 
+
+//Connect to mongoose
+var mongoose=require('mongoose');
+mongoose.connect("mongodb://localhost/my_tasks", {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true});
+
+mongoose.connection.once('open', ()=>{
+    console.log("connected..");
+}).on('error', ()=>{
+    console.log("error.. can't connect");
+});
+
+var taskSchema= mongoose.Schema({
+    task: String,
+    status: Boolean
+});
+
+var Task=mongoose.model("Tasks", taskSchema);
+
+
+
 //GET
 app.get("/", function(res,req){
     fs.readFile('database.json','utf-8',function(err,dataRead){
